@@ -5,6 +5,7 @@ import express from "express";
 import { authRoutes } from "./module/auth/auth.routes";
 import cookieParser from "cookie-parser";
 import { blogRoutes } from "./module/blogs/blog.routes";
+import { projectRoutes } from "./module/projects/project.routes";
 
 const app = express();
 
@@ -20,7 +21,8 @@ app.use(express.json());
 app.use(cookieParser());
 // Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/blogs", blogRoutes); // Add this
+app.use("/api/blogs", blogRoutes);
+app.use("/api/projects", projectRoutes);
 
 // Health check
 app.get("/api/health", (_req, res) => {
