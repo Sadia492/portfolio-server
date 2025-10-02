@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -14,14 +13,49 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 model User {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(cuid())
+  name      String
   email     String   @unique
-  password  String
-  name      String?
-  role      String   @default("owner")
+  password  String   // hashed with bcrypt
+  role      Role     @default(OWNER) // Only one OWNER, others can be future roles
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   blogs     Blog[]
   projects  Project[]
 }
 
+enum Role {
+  OWNER
+  ADMIN   // if you expand later
+  USER    // for visitors (optional)
+}
 
+model Blog {
+  id        String   @id @default(cuid())
+  title     String
+  slug      String   @unique
+  content   String   // plain text or HTML from rich editor
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String
+  features    String?  // optional, maybe JSON if you want structured data
+  thumbnail   String?  // image URL
+  githubUrl   String?
+  liveUrl     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  ownerId     String
+  owner       User     @relation(fields: [ownerId], references: [id])
+}
