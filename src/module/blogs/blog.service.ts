@@ -1,10 +1,10 @@
+// src/modules/blogs/blog.service.ts
 import { Prisma } from "@prisma/client";
 import { prisma } from "../../config/db";
 
 export interface CreateBlogData {
   title: string;
   content: string;
-  excerpt?: string;
   published?: boolean;
   authorId: string;
 }
@@ -12,7 +12,6 @@ export interface CreateBlogData {
 export interface UpdateBlogData {
   title?: string;
   content?: string;
-  excerpt?: string;
   published?: boolean;
 }
 

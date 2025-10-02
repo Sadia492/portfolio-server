@@ -1,3 +1,4 @@
+// src/modules/blogs/blog.controller.ts
 import { Request, Response } from "express";
 import {
   getPublishedBlogs,
@@ -108,10 +109,14 @@ export const createBlogController = async (req: Request, res: Response) => {
 export const updateBlogController = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const updateData = req.body;
+    const { title, content, published } = req.body;
     const authorId = (req as any).user.userId;
 
-    const result = await updateBlog(id, updateData, authorId);
+    const result = await updateBlog(
+      id,
+      { title, content, published },
+      authorId
+    );
 
     if (!result.success) {
       return res.status(400).json(result);
