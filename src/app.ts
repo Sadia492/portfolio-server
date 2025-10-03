@@ -1,60 +1,41 @@
-// src/app.ts
 import compression from "compression";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
 import { authRoutes } from "./module/auth/auth.routes";
-import cookieParser from "cookie-parser";
 import { blogRoutes } from "./module/blogs/blog.routes";
 import { projectRoutes } from "./module/projects/project.routes";
 
 const app = express();
 
 // Middleware
-app.use(compression());
+app.use(compression()); // Compresses response bodies for faster delivery
+app.use(express.json()); // Parse incoming JSON requests
+
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://portfolio-client-five-psi.vercel.app",
     credentials: true,
   })
 );
-app.use(express.json());
+
 app.use(cookieParser());
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/blogs", blogRoutes);
 app.use("/api/projects", projectRoutes);
 
-// Health check
-app.get("/api/health", (_req, res) => {
-  res.json({
-    success: true,
-    message: "API is running",
-    timestamp: new Date().toISOString(),
-  });
+// Default route for testing
+app.get("/", (_req, res) => {
+  res.send("API is running");
 });
 
 // 404 Handler
-app.use((req, res) => {
+app.use((req, res, next) => {
   res.status(404).json({
     success: false,
     message: "Route Not Found",
   });
 });
-
-// Error handler
-app.use(
-  (
-    error: any,
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) => {
-    console.error("Error:", error);
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-    });
-  }
-);
 
 export default app;
