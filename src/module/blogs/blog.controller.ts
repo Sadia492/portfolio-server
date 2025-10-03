@@ -139,8 +139,6 @@ export const getAdminBlog = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    console.log("Fetching blog with ID:", id); // Debug log
-
     const result = await getBlogAdminById(id);
 
     if (!result.success) {
