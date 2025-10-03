@@ -8,6 +8,7 @@ import {
   updateBlog,
   deleteBlog,
   togglePublishStatus,
+  getBlogAdminById,
 } from "./blog.service";
 
 // Get all published blogs (public)
@@ -125,6 +126,30 @@ export const updateBlogController = async (req: Request, res: Response) => {
     res.json(result);
   } catch (error) {
     console.error("Update blog controller error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+// src/modules/blogs/blog.controller.ts
+// Get single blog by ID (public route)
+export const getAdminBlog = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    console.log("Fetching blog with ID:", id); // Debug log
+
+    const result = await getBlogAdminById(id);
+
+    if (!result.success) {
+      return res.status(404).json(result);
+    }
+
+    res.json(result);
+  } catch (error) {
+    console.error("Get blog by ID controller error:", error);
     res.status(500).json({
       success: false,
       message: "Internal server error",

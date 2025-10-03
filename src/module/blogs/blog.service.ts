@@ -103,7 +103,44 @@ export const getAllBlogs = async (): Promise<BlogResponse> => {
     };
   }
 };
+// Get single blog by ID or slug (public - returns published or unpublished)
+// src/modules/blogs/blog.service.ts
+export const getBlogAdminById = async (id: string): Promise<BlogResponse> => {
+  try {
+    const blog = await prisma.blog.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
 
+    if (!blog) {
+      return {
+        success: false,
+        message: "Blog not found",
+      };
+    }
+
+    return {
+      success: true,
+      data: blog,
+    };
+  } catch (error) {
+    console.error("Get blog by ID error:", error);
+    return {
+      success: false,
+      message: "Error fetching blog",
+    };
+  }
+};
 // Get blog by ID or slug (public if published, admin can see unpublished)
 export const getBlogById = async (
   id: string,
