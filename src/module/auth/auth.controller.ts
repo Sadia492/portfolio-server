@@ -24,7 +24,7 @@ export const login = async (req: Request, res: Response) => {
     // ✅ CORRECT: Store the TOKEN in cookie, not user data
     res.cookie("token", result.token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
       sameSite: "none",
     });
 
@@ -68,7 +68,7 @@ export const logout = async (req: Request, res: Response) => {
     // Clear the token cookie
     res.clearCookie("token", {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
       sameSite: "none",
     });
 

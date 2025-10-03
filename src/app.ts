@@ -9,15 +9,16 @@ import { projectRoutes } from "./module/projects/project.routes";
 const app = express();
 
 // Middleware
-app.use(compression()); // Compresses response bodies for faster delivery
-app.use(express.json()); // Parse incoming JSON requests
-
+app.set("trust proxy", 1);
 app.use(
   cors({
     origin: "https://portfolio-client-five-psi.vercel.app",
     credentials: true,
   })
 );
+app.use(compression()); // Compresses response bodies for faster delivery
+app.use(express.json()); // Parse incoming JSON requests
+app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser());
 // Routes
